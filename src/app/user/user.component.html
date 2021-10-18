@@ -1,0 +1,17 @@
+<div>
+  <div>User component:</div>
+  <button id="addUser" (click)="addUser()">Add user</button>
+
+  <ul>
+    <li class="todo-item" *ngFor="let user of users; index as i">
+      user:{{ user.firstName }}
+    </li>
+  </ul>
+
+  <ul>
+  <li>Jedna </li>
+  <li *ngFor="let pizza of nums index as i">
+    {{ i + 1 }}. {{ pizza }}
+  </li>
+</ul>
+</div>

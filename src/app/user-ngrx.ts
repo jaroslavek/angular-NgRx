@@ -1,4 +1,11 @@
-import { createAction, createFeatureSelector, createReducer, createSelector, on, props } from '@ngrx/store';
+import {
+  createAction,
+  createFeatureSelector,
+  createReducer,
+  createSelector,
+  on,
+  props,
+} from '@ngrx/store';
 
 export const addUser = createAction('[User] Add', props<{ user: UserDto }>());
 export const removeUser = createAction('[User] Remove');
@@ -14,24 +21,27 @@ export interface UserState {
   currentUser: UserDto;
 }
 
-export const getUserState = createFeatureSelector<UserState>('users');
-export const getUsers = createSelector(getUserState, (state: UserState) => state.users);
-
-export const initialState = { users: [] } as UserState;
+export const initialState: UserState = {
+  users: [],
+  currentUser: {} as UserDto,
+};
 
 const _userReducer = createReducer(
   initialState,
   on(addUser, (state, { user }) => {
     const users: UserDto[] = [user, ...state.users];
-    console.log('users:', users)
+    console.log('users:', users);
     return { ...state, users: users };
   })
 );
 
-export function userReducer(state, action) {
+export function userReducer(state: any, action: any) {
   return _userReducer(state, action);
 }
 
+export const getUserState = createFeatureSelector<UserState>('user');
 
-export const selectUsers = (state: UserState) => state.users;
-
+export const selectUsers = createSelector(
+  getUserState,
+  (state: UserState) => state.users
+);

@@ -1,15 +1,47 @@
-import { createReducer, on } from '@ngrx/store';
-import { increment, decrement, reset } from './counter.actions';
+import {
+  createAction,
+  createFeatureSelector,
+  createReducer,
+  createSelector,
+  on,
+  props,
+} from '@ngrx/store';
 
-export const initialState = 0;
+export const addUser = createAction('[User] Add', props<{ user: UserDto }>());
+export const removeUser = createAction('[User] Remove');
+export const reset = createAction('[User] Reset');
 
-const _counterReducer = createReducer(
+export interface UserDto {
+  firstName: string;
+  lastName: string;
+}
+
+export interface UserState {
+  users: UserDto[];
+  currentUser: UserDto;
+}
+
+export const initialState: UserState = {
+  users: [],
+  currentUser: {} as UserDto,
+};
+
+const _userReducer = createReducer(
   initialState,
-  on(increment, (state) => state + 1),
-  on(decrement, (state) => state - 1),
-  on(reset, (state) => 0)
+  on(addUser, (state, { user }) => {
+    const users: UserDto[] = [user, ...state.users];
+    console.log('users:', users);
+    return { ...state, users: users };
+  })
 );
 
-export function counterReducer(state, action) {
-  return _counterReducer(state, action);
+export function userReducer(state: any, action: any) {
+  return _userReducer(state, action);
 }
+
+export const getUserState = createFeatureSelector<UserState>('user');
+
+export const selectUsers = createSelector(
+  getUserState,
+  (state: UserState) => state.users
+);
